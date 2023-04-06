@@ -1,7 +1,8 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 let keyIndex = 0;
 // 翻译统计命中和缺失的情况
-
-const that: any = this;
+const that = this;
 const type = [
     'String',
     'Number',
@@ -19,9 +20,8 @@ const type = [
     'Window',
     'global'
 ];
-
 for (const name of type) {
-    that[`is${name}`] = (obj: any) => Object.prototype.toString.call(obj) === `[object ${name}]`;
+    that[`is${name}`] = (obj) => Object.prototype.toString.call(obj) === `[object ${name}]`;
 }
 // 判断代码是否运行在小程序环境中，有些对象小程序和浏览器不一致，比如websocket,localStorage
 function isInWp() {
@@ -36,7 +36,7 @@ function isInWp() {
     // );
 }
 // 生成nStart到nStop的数组，间隔为nStep
-function range(start: number, stop?: number, step?: number) {
+function range(start, stop, step) {
     if (stop === null || stop === undefined) {
         stop = start || 0;
         start = 0;
@@ -47,7 +47,7 @@ function range(start: number, stop?: number, step?: number) {
     }
     // 计算数组长度
     const length = Math.max(Math.ceil((stop - start) / step), 0);
-    const result: number[] = new Array(length);
+    const result = new Array(length);
     for (let i = 0; i < length; i++, start += step) {
         result[i] = start;
     }
@@ -55,26 +55,29 @@ function range(start: number, stop?: number, step?: number) {
 }
 // aItem里如果有后面的参数就去掉
 // 如fWithOut([1, 2, 3, 3], 2, 3)返回[1]
-function without(arr: any[], ...args: any[]) {
+function without(arr, ...args) {
     for (let i = arr.length - 1; i >= 0; i--) {
-        if (args.includes(arr[i])) arr.splice(i, 1);
+        if (args.includes(arr[i]))
+            arr.splice(i, 1);
     }
     return arr;
 }
 // 类似数组的find方法，区别在于能处理likeArray和likeObject类型，bAll为true返回数组
-function find(arr: any[], cb: (...args: any[]) => boolean, bAll?: boolean) {
-    let aIndex: number | number[] = this.findIndex(arr, cb, bAll);
-    aIndex = bAll ? (aIndex as number[]) : ([aIndex] as number[]);
+function find(arr, cb, bAll) {
+    let aIndex = this.findIndex(arr, cb, bAll);
+    aIndex = bAll ? aIndex : [aIndex];
     const result = aIndex.map((index) => (index === -1 ? undefined : arr[index]));
     return bAll ? result : result[0];
 }
 // 类似数组的findIndex方法，区别在于能处理likeArray和likeObject类型，bAll为true返回数组
-function findIndex(arr: any[], cb: (...args: any[]) => boolean, all?: boolean) {
-    if (!that.isFunction(cb)) return;
-    const result: number[] = [];
+function findIndex(arr, cb, all) {
+    if (!that.isFunction(cb))
+        return;
+    const result = [];
     let has = false;
     for (let i = 0; i < arr.length; i++) {
-        if (!all && has) break;
+        if (!all && has)
+            break;
         if (cb(arr[i], i)) {
             result.push(i);
             has = true;
@@ -85,20 +88,23 @@ function findIndex(arr: any[], cb: (...args: any[]) => boolean, all?: boolean) {
 // 返回一个二维数组，重复值的下标
 // 如[1, 2, 3, 4, 6, 4, 4, 6]
 // 返回[[3, 5, 6], [4, 7]]
-function findRepeat(aItem: any[], conf = { noNull: false }) {
+function findRepeat(aItem, conf = { noNull: false }) {
     const result = [];
     const mark = new Map();
     const noNull = !!conf.noNull;
     for (const [index, item] of aItem.entries()) {
-        if (noNull && (item === null || item === undefined)) continue;
+        if (noNull && (item === null || item === undefined))
+            continue;
         if (mark.has(item)) {
             mark.get(item).push(index);
-        } else {
+        }
+        else {
             mark.set(item, [index]);
         }
     }
     for (const item of mark.values()) {
-        if (item.length > 1) result.push(item);
+        if (item.length > 1)
+            result.push(item);
     }
     return result;
 }
@@ -114,11 +120,11 @@ function key() {
 function primaryKey() {
     return this.ascId() + '_' + new Date().getTime() + '_' + Math.floor(Math.random() * 10001);
 }
-function outColor(info: string | { [key: string]: any }, color: string) {
+function outColor(info, color) {
     try {
-        info = (info as { [key: string]: any }).stack || (info as string);
+        info = info.stack || info;
         console.log('%c ' + info, 'color:' + (color || '#00BC9B'));
-    } catch (e) {}
+    }
+    catch (e) { }
 }
-
-export default { isInWp, range, without, find, findIndex, findRepeat, ascId, key, primaryKey, outColor };
+exports.default = { isInWp, range, without, find, findIndex, findRepeat, ascId, key, primaryKey, outColor };
